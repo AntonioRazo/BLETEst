@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2563eb">
+    <title>PWA Notificaciones Demo</title>
+    
+    <!-- Manifest inline para evitar archivo separado -->
+    <link rel="manifest" href='data:application/manifest+json,{
+        "name": "Notificaciones Demo",
+        "short_name": "NotifDemo",
+        "description": "PWA para probar notificaciones",
+        "start_url": ".",
+        "display": "standalone",
+        "background_color": "#ffffff",
+        "theme_color": "#2563eb",
+        "orientation": "portrait",
+        "icons": [
+            {
+                "src": "data:image/png;base64,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",
+                "sizes": "192x192",
+                "type": "image/png"
+            }
+        ]
+    }'>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        
+        .counter-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .button-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .button-secondary {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+        
+        .button-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .status-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .instructions {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.8;
+        }
+        
+        .instructions h3 {
+            color: #1f2937;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f3f4f6;
+            border-radius: 10px;
+        }
+        
+        .toggle-label {
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #9ca3af;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .toggle-switch.active {
+            background: #667eea;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(30px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 PWA Notificaciones Demo</h1>
+        
+        <div class="counter-display" id="counter">0</div>
+        
+        <button class="button button-primary" id="incrementBtn">
+            Incrementar Contador
+        </button>
+        
+        <button class="button button-secondary" id="notificationBtn">
+            Activar Notificaciones
+        </button>
+        
+        <div class="toggle-container">
+            <span class="toggle-label">Monitoreo automático</span>
+            <div class="toggle-switch" id="autoMonitor"></div>
+        </div>
+        
+        <div id="status" class="status status-info">
+            Estado: Esperando permisos...
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 Instrucciones para iPhone:</h3>
+            <ol>
+                <li>Abre esta página en Safari</li>
+                <li>Toca el botón de compartir (cuadrado con flecha)</li>
+                <li>Selecciona "Agregar a pantalla de inicio"</li>
+                <li>Abre la app desde tu pantalla de inicio</li>
+                <li>Activa las notificaciones y el monitoreo</li>
+                <li>Prueba incrementando el contador</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Service Worker inline
+        const swCode = `
+            self.addEventListener('install', (event) => {
+                console.log('Service Worker instalado');
+                self.skipWaiting();
+            });
+
+            self.addEventListener('activate', (event) => {
+                console.log('Service Worker activado');
+                event.waitUntil(clients.claim());
+            });
+
+            self.addEventListener('push', (event) => {
+                const options = {
+                    body: event.data ? event.data.text() : 'El contador ha cambiado!',
+                    icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+                    badge: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+                    vibrate: [200, 100, 200]
+                };
+                
+                event.waitUntil(
+                    self.registration.showNotification('Notificación PWA', options)
+                );
+            });
+
+            // Monitoreo periódico
+            let lastValue = 0;
+            
+            self.addEventListener('message', (event) => {
+                if (event.data.type === 'UPDATE_VALUE') {
+                    lastValue = event.data.value;
+                }
+                if (event.data.type === 'START_MONITORING') {
+                    startMonitoring();
+                }
+                if (event.data.type === 'STOP_MONITORING') {
+                    stopMonitoring();
+                }
+            });
+
+            let monitoringInterval;
+
+            function startMonitoring() {
+                if (monitoringInterval) return;
+                
+                monitoringInterval = setInterval(async () => {
+                    // Simular chequeo de cambios
+                    const randomChange = Math.random() < 0.3; // 30% probabilidad
+                    
+                    if (randomChange) {
+                        const newValue = lastValue + Math.floor(Math.random() * 5) + 1;
+                        lastValue = newValue;
+                        
+                        await self.registration.showNotification('¡Cambio detectado!', {
+                            body: \`El valor cambió a \${newValue}\`,
+                            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+                            tag: 'value-change',
+                            requireInteraction: true
+                        });
+                        
+                        // Notificar a la página principal
+                        const clients = await self.clients.matchAll();
+                        clients.forEach(client => {
+                            client.postMessage({
+                                type: 'VALUE_CHANGED',
+                                value: newValue
+                            });
+                        });
+                    }
+                }, 10000); // Cada 10 segundos
+            }
+
+            function stopMonitoring() {
+                if (monitoringInterval) {
+                    clearInterval(monitoringInterval);
+                    monitoringInterval = null;
+                }
+            }
+        `;
+
+        // Variables globales
+        let counter = 0;
+        let notificationsEnabled = false;
+        let autoMonitoring = false;
+        let swRegistration = null;
+
+        // Elementos DOM
+        const counterDisplay = document.getElementById('counter');
+        const incrementBtn = document.getElementById('incrementBtn');
+        const notificationBtn = document.getElementById('notificationBtn');
+        const statusDiv = document.getElementById('status');
+        const autoMonitorToggle = document.getElementById('autoMonitor');
+
+        // Registrar Service Worker
+        async function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                try {
+                    const blob = new Blob([swCode], { type: 'application/javascript' });
+                    const swUrl = URL.createObjectURL(blob);
+                    swRegistration = await navigator.serviceWorker.register(swUrl);
+                    console.log('Service Worker registrado');
+                    updateStatus('Service Worker activo', 'success');
+                    
+                    // Escuchar mensajes del SW
+                    navigator.serviceWorker.addEventListener('message', (event) => {
+                        if (event.data.type === 'VALUE_CHANGED') {
+                            counter = event.data.value;
+                            updateCounter();
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error registrando SW:', error);
+                    updateStatus('Error con Service Worker', 'warning');
+                }
+            }
+        }
+
+        // Solicitar permisos de notificación
+        async function requestNotificationPermission() {
+            if (!('Notification' in window)) {
+                updateStatus('Notificaciones no soportadas', 'warning');
+                return false;
+            }
+
+            if (Notification.permission === 'granted') {
+                notificationsEnabled = true;
+                updateStatus('Notificaciones activadas ✓', 'success');
+                notificationBtn.textContent = 'Notificaciones Activadas';
+                notificationBtn.disabled = true;
+                return true;
+            }
+
+            if (Notification.permission !== 'denied') {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    notificationsEnabled = true;
+                    updateStatus('Notificaciones activadas ✓', 'success');
+                    notificationBtn.textContent = 'Notificaciones Activadas';
+                    notificationBtn.disabled = true;
+                    
+                    // Mostrar notificación de prueba
+                    new Notification('¡Notificaciones activadas!', {
+                        body: 'Recibirás alertas cuando el contador cambie',
+                        icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=='
+                    });
+                    return true;
+                }
+            }
+            
+            updateStatus('Permisos de notificación denegados', 'warning');
+            return false;
+        }
+
+        // Actualizar contador
+        function updateCounter() {
+            counterDisplay.textContent = counter;
+            if (swRegistration && swRegistration.active) {
+                swRegistration.active.postMessage({
+                    type: 'UPDATE_VALUE',
+                    value: counter
+                });
+            }
+        }
+
+        // Incrementar contador
+        function incrementCounter() {
+            const oldValue = counter;
+            counter += Math.floor(Math.random() * 5) + 1;
+            updateCounter();
+            
+            if (notificationsEnabled && !autoMonitoring) {
+                new Notification('Contador actualizado', {
+                    body: `Cambió de ${oldValue} a ${counter}`,
+                    icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+                    tag: 'counter-update'
+                });
+            }
+        }
+
+        // Actualizar estado
+        function updateStatus(message, type = 'info') {
+            statusDiv.textContent = `Estado: ${message}`;
+            statusDiv.className = `status status-${type}`;
+        }
+
+        // Toggle monitoreo automático
+        function toggleAutoMonitoring() {
+            autoMonitoring = !autoMonitoring;
+            autoMonitorToggle.classList.toggle('active', autoMonitoring);
+            
+            if (swRegistration && swRegistration.active) {
+                if (autoMonitoring) {
+                    swRegistration.active.postMessage({ type: 'START_MONITORING' });
+                    updateStatus('Monitoreo automático activado', 'success');
+                } else {
+                    swRegistration.active.postMessage({ type: 'STOP_MONITORING' });
+                    updateStatus('Monitoreo automático desactivado', 'info');
+                }
+            }
+        }
+
+        // Event listeners
+        incrementBtn.addEventListener('click', incrementCounter);
+        notificationBtn.addEventListener('click', requestNotificationPermission);
+        autoMonitorToggle.addEventListener('click', toggleAutoMonitoring);
+
+        // Inicialización
+        window.addEventListener('load', async () => {
+            await registerServiceWorker();
+            
+            // Verificar si ya tenemos permisos
+            if (Notification.permission === 'granted') {
+                notificationsEnabled = true;
+                notificationBtn.textContent = 'Notificaciones Activadas';
+                notificationBtn.disabled = true;
+                updateStatus('Notificaciones ya activadas', 'success');
+            }
+            
+            // Detectar si es una PWA instalada
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                updateStatus('PWA instalada correctamente', 'success');
+            } else {
+                updateStatus('Instala la PWA para mejor experiencia', 'info');
+            }
+        });
+
+        // Manejar cambios de visibilidad
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && counter > 0) {
+                updateCounter();
+            }
+        });
+    </script>
+</body>
+</html>
